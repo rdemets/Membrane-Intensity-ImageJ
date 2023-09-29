@@ -1,10 +1,10 @@
 // This macro aims to quantify the membrane intensity of all channels of individual cells
 // All function used are available from the stable version of Fiji and PTBIOP plugin.
 // Requires installation of cellpose through Anaconda
-// 
+// Added size filter after cellpose to remove small objects
 
 // Macro author R. De Mets
-// Version : 0.1.1 , 15/08/2023
+// Version : 0.1.2 , 15/08/2023
 
 
 
@@ -62,9 +62,25 @@ macro "Cell Mask Button Action Tool - C000D63DfdC000D59DbcC000D17C000DddC000D38C
 				
 				// run cellpose on individual Z. Diameter set at 200. Can be changed
 				run("Cellpose Advanced", "diameter=200 cellproba_threshold=0.0 flow_threshold=0.4 anisotropy=1.0 diam_threshold=12.0 model=cyto2 nuclei_channel="+ch2+" cyto_channel="+ch1+" dimensionmode=2D stitch_threshold=-1.0 omni=false cluster=false additional_flags=");
-				run("Label image to ROIs", "rm=[RoiManager[size=30, visible=true]]");
+				run("Label image to ROIs", "rm=[RoiManager[size=300, visible=true]]");
+				
+				
+				run("Set Measurements...", "area redirect=None decimal=3");
+				index = 0;
+				n=roiManager("count");
+				for (roi = n-1; roi>=0; roi--) {
+					roiManager("Select", roi);
+					roiManager("Measure");
+					size = getResult ("Area", index);
+					index = index +1;
+					if (size < 300) {
+						roiManager("Delete");
+					}
+				}
+				selectWindow("Results"); 
+				run("Close" );
+			
 				roiManager("Save", dirS+title+"_rois.zip");
-
 				close();
 
 			}	

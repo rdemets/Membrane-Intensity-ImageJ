@@ -26,5 +26,6 @@ Please cite [Cellpose](https://www.nature.com/articles/s41592-020-01018-x) if yo
 
 ## Updates history
 (0.0.1) Segment using Cellpose for individual cells
-(0.1.0) Add Dialog box
+<br>(0.1.0) Add Dialog box
 <br>(0.1.1) Tasks splitted into three buttons
+<br>(0.1.2) Add size filter for cell detections
